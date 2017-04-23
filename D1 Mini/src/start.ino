@@ -42,7 +42,7 @@ void loop() {
   wifiCheck(); //Maintain wifi connection
   yield(); //Let the ESPcore handle background tasks
 
-  readLightAndPost();
+  //readLightAndPost();
   getAndUpdateRGBValueFromServer();
 
 delay(5000);
@@ -183,7 +183,9 @@ void wifiCheck()
 
 
 
-void post(String payload, String url) {
+String post(String payload, String url) {
+
+    String response = "Request not allowed because og timelimit";
 
     if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
       updateTimestamp = millis();
@@ -195,18 +197,22 @@ void post(String payload, String url) {
       Serial.println("payload: " + payload);
       Serial.println("url: " + url);
 
-      int response = http.POST(payload);
+      String status = String(http.POST(payload));
+      response = http.getString();
 
-      Serial.println(response);
+      Serial.println("Status: " + status);
+      Serial.println("Response: " + response);
 
       http.end();
     }
+
+    return response;
 }
 
 
 String get(String url) {
 
-    String response = "Request timeout";
+    String response = "Request not allowed because og timelimit";
 
     if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
 
@@ -219,7 +225,7 @@ String get(String url) {
         // httpCode will be negative on error
         if(httpCode > 0) {
             // HTTP header has been send and Server response header has been handled
-            Serial.println("[HTTP] GET... code: " + httpCode);
+            Serial.println("[HTTP] GET... code: " + String(httpCode));
 
             // file found at server
             if(httpCode == HTTP_CODE_OK) {
@@ -227,11 +233,12 @@ String get(String url) {
                 Serial.println("Response " + response);
             }
         } else {
-            Serial.println("[HTTP] GET... failed, error: " + httpCode);
+            Serial.println("[HTTP] GET... failed, error: " + String(httpCode));
             response = "ERROR";
         }
 
         http.end();
-        return response;
       }
+
+      return response;
 }
