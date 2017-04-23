@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    {% if session.logged_in %}
+        <h1>Logged in</h1>
+    {% endif %}
+
+    <h1>Hello World</h1>
+
+    {% for number in numbers %}
+    <h2> {{ number }}</h2>
+  {% else %}
+    <h2>No numbers</h2>
+  {% endfor %}
+    <h3>This is the first page of many</h3>
+
+{% endblock %}
+
