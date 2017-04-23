@@ -42,7 +42,7 @@ void loop() {
   wifiCheck(); //Maintain wifi connection
   yield(); //Let the ESPcore handle background tasks
 
-  //readLightAndPost();
+  readLightAndPost();
   getAndUpdateRGBValueFromServer();
 
 delay(5000);
@@ -83,7 +83,7 @@ void readLightAndPost() {
   int value = analogRead(A0);
   String poststring = String(value);
 
-  post("lightvalue=" + poststring, "/api/d1mini");
+  post(poststring, "/api/d1mini");
 
 }
 
@@ -185,7 +185,7 @@ void wifiCheck()
 
 String post(String payload, String url) {
 
-    String response = "Request not allowed because og timelimit";
+    String response = "Request not allowed because of timelimit";
 
     if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
       updateTimestamp = millis();
@@ -212,7 +212,7 @@ String post(String payload, String url) {
 
 String get(String url) {
 
-    String response = "Request not allowed because og timelimit";
+    String response = "Request not allowed because of timelimit";
 
     if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
 
