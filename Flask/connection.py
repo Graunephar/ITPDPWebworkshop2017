@@ -5,9 +5,8 @@ class My_connections(object):
     def __init__(self):
         self.connection = firebase.FirebaseApplication("https://webtek-workshop.firebaseio.com/", None)
 
-    def get_color(self):
+    def get_colors(self):
         result = self.connection.get('/Colors', None)
-        print(result)
         return result
 
     def send_data(self, rgb_value):

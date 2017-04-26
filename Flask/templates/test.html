@@ -1,18 +1,25 @@
+<!-- INHERITENCE -->
 {% extends "layout.html" %}
-{% block body %}
 
+<!-- TEMPLATE -->
+{% block body %}
+    <!-- IF STATEMENT -->
     {% if session.logged_in %}
         <h1>Logged in</h1>
     {% endif %}
 
-    <h1>Hello World</h1>
+    <h1>{{hello}}</h1>
 
-    {% for number in numbers %}
-    <h2> {{ number }}</h2>
+  <!-- FOR LOOP -->
+  {% for color in colors %}
+      <h1> name : {{ color | safe }}</h1>
+      <p> timestamp : {{ colors[color].timestamp | safe}} </p>
+      <p> timestamp : {{ colors[color].lightvalue | safe}} </p>
+
   {% else %}
-    <h2>No numbers</h2>
+    <h2>No Colors</h2>
   {% endfor %}
-    <h3>This is the first page of many</h3>
+
+    <h3>Flask is awesome</h3>
 
 {% endblock %}
-

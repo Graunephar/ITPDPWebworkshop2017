@@ -1,14 +1,16 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, json
 from connection import *
 
 app = Flask(__name__)
 
 firebase_connection = My_connections()
-
+colors = firebase_connection.get_colors()
 
 @app.route('/')
 def test():
-    return render_template("test.html")
+    colors = firebase_connection.get_colors()
+    hello = "Hello world"
+    return render_template("test.html", colors = colors, hello = hello)
 
 @app.route('/api/d1mini', methods=['POST'])
 def d1mini():
@@ -22,7 +24,7 @@ def d1mini():
 def getrgb():
     # Hent data fra firebase & send til d1mini
     #content = firebase_connection.get_color()
-    return "233,0,0"
+    return "0,100,100"
 
 if __name__ == '__main__':
     app.run(debug=True)

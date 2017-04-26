@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World</title>
+
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script> setTimeout(function(){window.location.reload(1);}, 5000); </script>
 </head>
 <body>
     <a href="{{ url_for('test') }}">test</a>
@@ -11,20 +13,6 @@
     {% block body %}
 
     {% endblock %}
-
-<script src="https://www.gstatic.com/firebasejs/3.8.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyCa0wLVmLCZ8zX8T5s12ruia_G2detf0GE",
-    authDomain: "webtek-workshop.firebaseapp.com",
-    databaseURL: "https://webtek-workshop.firebaseio.com",
-    projectId: "webtek-workshop",
-    storageBucket: "webtek-workshop.appspot.com",
-    messagingSenderId: "1006686906210"
-  };
-  firebase.initializeApp(config);
-</script>
 
 </body>
 
