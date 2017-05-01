@@ -4,17 +4,8 @@
 
 #define updateRate 500 // The minimal time between two requests in ms
 #define PORT 80
-#define BASE_URL "webtekws.herokuapp.com" //WITHOUT HTTP://
-
-
-const int red = D3;
-const int green = D2;
-const int blue = D1;
-
-const int lightPin = A0;
-
-double updateTimestamp = 0; // used for the update rate
-double readingTimestamp   = 0; // used for the update rate
+#define BASE_URL "requestb.in" //WITHOUT HTTP://
+#define BIN_ID "/1edquiu1"
 
 //WiFi informationer
 const char* ssid     = "AU-Gadget";
@@ -25,6 +16,7 @@ HTTPClient http;
 
 
 void setup() {
+
   Serial.begin(9600);
 
   WiFi.persistent(false); //  Do this just to be on the safe side!!!!
@@ -32,10 +24,15 @@ void setup() {
   delay(10);
   wifiConnect();
 
-  //Pin stuff
-  pinMode(red, OUTPUT);
-  pinMode(green, OUTPUT);
-  pinMode(blue, OUTPUT);
+  delay (1000);
+
+  String response = post("Graunephar er sej!", BIN_ID);
+  Serial.print("RESPONSE: ");
+  Serial.println(response);
+
+  response = get(BIN_ID);
+  Serial.print("RESPONSE: ");
+  Serial.println(response);
 
 
 }
@@ -44,95 +41,8 @@ void loop() {
   wifiCheck(); //Maintain wifi connection
   yield(); //Let the ESPcore handle background tasks
 
-  readLightAndPost();
-  getAndUpdateRGBValueFromServer();
-
-delay(5000);
-}
-
-void getAndUpdateRGBValueFromServer() {
-
-    String command = get("/api/getrgb"); //Gets response from server
-
-
-    int Rcolorvalue = getValue(command, ',', 0).toInt();
-    int Gcolorvalue = getValue(command, ',', 1).toInt();
-    int Bcolorvalue = getValue(command, ',', 2).toInt();
-
-    writeRGBColor(Rcolorvalue, Gcolorvalue, Bcolorvalue);
-
-    printAllValues(command);
 
 }
-
-/**
- * Writes a RGB color to the RGB diode
- * @Param R: the red value of the color
- * @Param G: the green value of the color
- * @Param B: the blue value of the color
- */
-void writeRGBColor(int R, int G, int B) {
-
-   analogWrite(red, R);
-   analogWrite(green, G);
-   analogWrite(blue, B);
-
-
-}
-
-
-void readLightAndPost() {
-  int value = analogRead(lightPin);
-  String poststring = String(value);
-
-  post(poststring, "/api/d1mini");
-
-}
-
-
-
-
-void printAllValues(String command) {
-
-
-   int index = 0; //the value that is currently being acceses in the loop
-   String param; //The value for the current variable that is being acceses in the loop
-
-   //Loops through all the arguments in the command string putting them in the param variable as it goes along
-   while((param = getValue(command, ',', index)) != "") {
-
-       Serial.println("Param" + String(index) + " : " + param); //print the variable
-
-       index++;
-
-   }
-
-}
-
-/**
- * This function  can retrive an argument from a string with arguments deperatet by a particluar character
- * @Param data: a string containing the data seprated by a particular character
- * @Param seperator: the character that seperates the values e.g. ','
- * @Param index: the number of variable from the list that we want to retrieve
- * @Return a string with the value, NULL if out of range
- */
-String getValue(String data, char separator, int index) {
-  int found = 0;
-  int strIndex[] = {0, -1};
-  int maxIndex = data.length()-1;
-
-  for(int i=0; i<=maxIndex && found<=index; i++){
-    if(data.charAt(i)==separator || i==maxIndex){
-        found++;
-        strIndex[0] = strIndex[1]+1;
-        strIndex[1] = (i == maxIndex) ? i+1 : i;
-    }
-  }
-
-  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-
 
 
 void wifiConnect() {
@@ -189,8 +99,6 @@ String post(String payload, String url) {
 
     String response = "Request not allowed because of timelimit";
 
-    if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
-      updateTimestamp = millis();
 
       Serial.println("[HTTP] POST begin...");
       // configure traged server and url
@@ -206,7 +114,7 @@ String post(String payload, String url) {
       Serial.println("Response: " + response);
 
       http.end();
-    }
+
 
     return response;
 }
@@ -215,8 +123,6 @@ String post(String payload, String url) {
 String get(String url) {
 
     String response = "Request not allowed because of timelimit";
-
-    if( millis() - updateTimestamp > updateRate) { // Safeguards against server timeouts
 
         Serial.println("[HTTP] GET begin...");
         http.begin(BASE_URL, PORT, url); //HTTP
@@ -240,7 +146,7 @@ String get(String url) {
         }
 
         http.end();
-      }
+
 
       return response;
 }
