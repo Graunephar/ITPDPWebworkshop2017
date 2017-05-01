@@ -11,12 +11,14 @@ const int red = D3;
 const int green = D2;
 const int blue = D1;
 
+const int lightPin = A0;
+
 double updateTimestamp = 0; // used for the update rate
 double readingTimestamp   = 0; // used for the update rate
 
 //WiFi informationer
-const char* ssid     = "Esben_39";
-const char* password = "after-dark";
+const char* ssid     = "AU-Gadget";
+const char* password = "augadget";
 
 HTTPClient http;
 
@@ -80,7 +82,7 @@ void writeRGBColor(int R, int G, int B) {
 
 
 void readLightAndPost() {
-  int value = analogRead(A0);
+  int value = analogRead(lightPin);
   String poststring = String(value);
 
   post(poststring, "/api/d1mini");
