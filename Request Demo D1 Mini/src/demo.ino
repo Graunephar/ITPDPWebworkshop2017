@@ -95,6 +95,12 @@ void wifiCheck()
 
 
 
+/**
+* POST function. this function post an argument to the URL
+* Argument 0, is the payload
+* Argument 1, is the url
+* This function requires you to define a BASE_URL and PORT. See above.
+*/
 String post(String payload, String url) {
 
     String response = "Request not allowed because of timelimit";
@@ -120,6 +126,13 @@ String post(String payload, String url) {
 }
 
 
+
+/**
+* GET function. this function retrieves an argument from the URL
+* Argument 0, is the URL
+* This function requires you to define a BASE_URL and PORT. See above.
+*
+*/
 String get(String url) {
 
     String response = "Request not allowed because of timelimit";
